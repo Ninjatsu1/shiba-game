@@ -11,11 +11,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float MovementSpeed = 30;
 
-    private Vector2 direction;//liekin suunta
     public bool facingRight; //Kertoo mihin suuntaan pelaaja menee
-    //private Animator myAnimator;
-    // Start is called before the first frame update
-    private bool attack;
+    private Animator myAnimator;
 
     public float jumpForce = 30;
     public bool OnAir = false;
@@ -24,8 +21,7 @@ public class Player : MonoBehaviour
 
         facingRight = true;
         myRigidbody = GetComponent<Rigidbody2D>();
-      //  myAnimator = GetComponent<Animator>();
-        direction = Vector2.right;
+        myAnimator = GetComponent<Animator>();
         this.myRigidbody.isKinematic = false;
 
     }
@@ -37,13 +33,11 @@ public class Player : MonoBehaviour
         //Kutsutaan funktiot
         HandleMovement(horizontal);
         flip(horizontal);
-       
+
 
 
         if (Input.GetKeyDown(KeyCode.Space) && (!this.OnAir))
         {
-            Debug.Log("dd");
-
             this.myRigidbody.AddForce(Vector2.up * this.jumpForce);
             this.OnAir = true;
         }
@@ -52,16 +46,23 @@ public class Player : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision)
     {
         this.OnAir = false;
-     
+
     }
-  
+
 
     void HandleMovement(float horizontal)
     {
 
         myRigidbody.velocity = new Vector2(horizontal * MovementSpeed * Time.deltaTime * 10, myRigidbody.velocity.y); //x = -1, y = 0
-       // myAnimator.SetFloat("speedAnimator", Mathf.Abs(horizontal));
+        if (horizontal == 0)
+        {
+            myAnimator.SetBool("IsWalking", false);
+        }
+        else
+        {
+            myAnimator.SetBool("IsWalking", true);
 
+        }
     }
 
     void flip(float horizontal)
@@ -74,9 +75,9 @@ public class Player : MonoBehaviour
             transform.localScale = theScale;
         }
     }
-  
 
-   
+
+
 
 
 
